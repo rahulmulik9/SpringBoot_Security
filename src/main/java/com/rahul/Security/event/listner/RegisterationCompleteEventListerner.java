@@ -1,4 +1,4 @@
-package com.rahul.Security.entity.listner;
+package com.rahul.Security.event.listner;
 
 import com.rahul.Security.entity.User;
 import com.rahul.Security.event.RegisterationComleteEvent;
