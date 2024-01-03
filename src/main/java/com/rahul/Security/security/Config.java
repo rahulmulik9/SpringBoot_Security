@@ -6,39 +6,40 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
+import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+
+import javax.sql.DataSource;
 
 @Configuration
 public class Config {
 
     //in memory auth
-    @Bean
-    public InMemoryUserDetailsManager userDetailsManager() {
-
-        //use {noop} which will let the spring boot know that password will be stored in plain text
-        //if you dont use then password will not work
-        UserDetails rahul = User.builder()
-                .username("Rahul")
-                .password("{noop}test123")
-                .roles("EMPLOYEE")
-                .build();
-
-        UserDetails abhi = User.builder()
-                .username("Abhi")
-                .password("{noop}test123")
-                .roles("EMPLOYEE", "MANAGER")
-                .build();
-        UserDetails amit = User.builder()
-                .username("Amit")
-                .password("{noop}test123")
-                .roles("EMPLOYEE", "MANAGER", "ADMIN")
-                .build();
-
-        return new InMemoryUserDetailsManager(rahul, abhi, amit);
-    }
+//    @Bean
+//    public InMemoryUserDetailsManager userDetailsManager() {
+//
+//        //use {noop} which will let the spring boot know that password will be stored in plain text
+//        //if you dont use then password will not work
+//        UserDetails rahul = User.builder()
+//                .username("Rahul")
+//                .password("{noop}test123")
+//                .roles("EMPLOYEE")
+//                .build();
+//
+//        UserDetails abhi = User.builder()
+//                .username("Abhi")
+//                .password("{noop}test123")
+//                .roles("EMPLOYEE", "MANAGER")
+//                .build();
+//        UserDetails amit = User.builder()
+//                .username("Amit")
+//                .password("{noop}test123")
+//                .roles("EMPLOYEE", "MANAGER", "ADMIN")
+//                .build();
+//
+//        return new InMemoryUserDetailsManager(rahul, abhi, amit);
+//    }
 
 
     @Bean
@@ -54,5 +55,13 @@ public class Config {
         http.httpBasic(Customizer.withDefaults());
         http.csrf(AbstractHttpConfigurer::disable);
         return  http.build();
+    }
+
+
+    //tell spring security to use JDBC authentication with our data source
+    @Bean
+    public UserDetailsManager userDetailsManager(DataSource dataSource){
+        return new JdbcUserDetailsManager(dataSource);
+
     }
 }
