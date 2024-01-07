@@ -24,10 +24,9 @@ public class SecurityConfig {
          *
          */
 
-
-        http.authorizeHttpRequests((requests) -> requests
+        http.csrf().disable().authorizeHttpRequests((requests) -> requests
                         .requestMatchers("/myAccount", "/myBalance", "/myLoans", "/myCards").authenticated()  //for password and username
-                        .requestMatchers("/notices", "/contact").permitAll())                                //for all
+                        .requestMatchers("/notices", "/contact", "/register").permitAll())                                //for all
                 .formLogin(Customizer.withDefaults())
                 .httpBasic(Customizer.withDefaults());
         return http.build();
@@ -67,7 +66,7 @@ public class SecurityConfig {
         return new InMemoryUserDetailsManager(admin, user);
     }
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return NoOpPasswordEncoder.getInstance();
     }
 
