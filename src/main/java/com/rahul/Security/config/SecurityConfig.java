@@ -7,14 +7,10 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
-import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
-
-import javax.sql.DataSource;
 
 
 @Configuration
@@ -52,46 +48,29 @@ public class SecurityConfig {
 
     }
 
-    //UserDatailsmanager which will do create, update, delete, change Password operations
-    //This interface has been implemented by InMemoryUserDetailsmanager, JDBCUserDetailsmanager , LdapUserDetailsmanager
-    //these are the user management
-
-    //if you are using JDBC user management then comment this method
-    //inMemory user management
-//    @Bean
-//    public InMemoryUserDetailsManager userDetailsService() {
-//        //*Approach 1 where we use NoOpPasswordEncoder Bean
-//        //while creating the user details*//*
-//        //By default this method will encode the password
-//        //if you don't want then use {noop} e.g password("{noop}1234")
-//        //InMemoryUserDetailsManager can take as many arguments
-//
-//        UserDetails admin = User.withUsername("admin")
-//                .password("12345")
-//                .authorities("admin")
-//                .build();
-//        UserDetails user = User.withUsername("user")
-//                .password("12345")
-//                .authorities("read")
-//                .build();
-//        return new InMemoryUserDetailsManager(admin, user);
-//    }
-
-    //this is used to get plain text password
-
-
-
-    //for JDBC user manager
-    //for this database is active and has user table
-    //create table User and files as we do in InMemoryuser manager
-    public UserDetailsService userDetailsService(DataSource dataSource) {
-        return new JdbcUserDetailsManager(dataSource);
-    }
-
     @Bean
-    public PasswordEncoder passwordEncoder() {
+    public InMemoryUserDetailsManager userDetailsService() {
+        //*Approach 1 where we use NoOpPasswordEncoder Bean
+        //while creating the user details*//*
+        //By default this method will encode the password
+        //if you don't want then use {noop} e.g password("{noop}1234")
+        //InMemoryUserDetailsManager can take as many arguments
+
+        UserDetails admin = User.withUsername("admin")
+                .password("12345")
+                .authorities("admin")
+                .build();
+        UserDetails user = User.withUsername("user")
+                .password("12345")
+                .authorities("read")
+                .build();
+        return new InMemoryUserDetailsManager(admin, user);
+    }
+    @Bean
+    public PasswordEncoder passwordEncoder(){
         return NoOpPasswordEncoder.getInstance();
     }
+
 
 }
 
