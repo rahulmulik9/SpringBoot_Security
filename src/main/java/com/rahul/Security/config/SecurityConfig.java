@@ -66,6 +66,8 @@ public class SecurityConfig {
                 .build();
         return new InMemoryUserDetailsManager(admin, user);
     }
+
+    //this is used to get plain text password
     @Bean
     public PasswordEncoder passwordEncoder(){
         return NoOpPasswordEncoder.getInstance();
