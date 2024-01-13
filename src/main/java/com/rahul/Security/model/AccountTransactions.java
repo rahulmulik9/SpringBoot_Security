@@ -32,7 +32,7 @@ public class AccountTransactions {
 	
 	@Column(name = "transaction_amt")
 	private int transactionAmt;
-	
+
 	@Column(name = "closing_balance")
 	private int closingBalance;
 	
